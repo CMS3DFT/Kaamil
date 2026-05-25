@@ -18,6 +18,8 @@ builder.Services.AddKaamilServices(builder.Configuration);
 
 var app = builder.Build();
 
+app.UseCors("Frontend");
+
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<KaamilDbContext>();
@@ -26,7 +28,6 @@ using (var scope = app.Services.CreateScope())
     scope.ServiceProvider.GetRequiredService<ReportFileService>().EnsureUploadDirectory();
 }
 
-app.UseCors("Frontend");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

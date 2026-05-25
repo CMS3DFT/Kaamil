@@ -42,15 +42,36 @@ public static class ServiceCollectionExtensions
 
         var corsRaw = config["Cors:Origins"]
             ?? Environment.GetEnvironmentVariable("CORS_ORIGINS")
-            ?? "http://localhost:5173";
+            ?? "http://localhost:5173,https://kaamil.vercel.app";
 
         var origins = corsRaw
-            .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+            .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+            .Select(o => o.TrimEnd('/'))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
 
         services.AddCors(options =>
         {
             options.AddPolicy("Frontend", policy =>
-                policy.WithOrigins(origins).AllowAnyHeader().AllowAnyMethod());
+            {
+                policy.SetIsOriginAllowed(origin =>
+                {
+                    if (string.IsNullOrWhiteSpace(origin))
+                        return false;
+
+                    var normalized = origin.TrimEnd('/');
+                    if (origins.Contains(normalized, StringComparer.OrdinalIgnoreCase))
+                        return true;
+
+                    if (Uri.TryCreate(normalized, UriKind.Absolute, out var uri)
+                        && (uri.Host.Equals("kaamil.vercel.app", StringComparison.OrdinalIgnoreCase)
+                            || uri.Host.EndsWith(".vercel.app", StringComparison.OrdinalIgnoreCase)))
+                        return true;
+
+                    return false;
+                });
+                policy.AllowAnyHeader().AllowAnyMethod();
+            });
         });
 
         services.AddControllers();
