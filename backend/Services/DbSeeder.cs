@@ -9,24 +9,33 @@ public static class DbSeeder
     private static readonly string[] DefaultCategories =
         ["Food", "Transport", "Bills", "Shopping", "Other"];
 
+    private const string DefaultAdminEmail = "admin@kaamil.com";
+    private const string DefaultAdminPassword = "Admin@123";
+
     public static async Task SeedAsync(KaamilDbContext db)
     {
         await db.Database.MigrateAsync();
 
-        if (await db.Users.AnyAsync(u => u.Role == "Admin"))
-            return;
-
-        var admin = new AppUser
+        var admin = await db.Users.FirstOrDefaultAsync(u => u.Email == DefaultAdminEmail);
+        if (admin is null)
         {
-            Id = Guid.NewGuid(),
-            Email = "admin@kaamil.com",
-            FullName = "System Admin",
-            Role = "Admin",
-            PasswordHash = BCrypt.Net.BCrypt.HashPassword("Admin@123"),
-            IsActive = true,
-        };
+            db.Users.Add(new AppUser
+            {
+                Id = Guid.NewGuid(),
+                Email = DefaultAdminEmail,
+                FullName = "System Admin",
+                Role = "Admin",
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(DefaultAdminPassword),
+                IsActive = true,
+            });
+        }
+        else
+        {
+            admin.Role = "Admin";
+            admin.IsActive = true;
+            admin.PasswordHash = BCrypt.Net.BCrypt.HashPassword(DefaultAdminPassword);
+        }
 
-        db.Users.Add(admin);
         await db.SaveChangesAsync();
     }
 

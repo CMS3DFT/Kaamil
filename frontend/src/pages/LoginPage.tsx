@@ -53,7 +53,7 @@ export default function LoginPage() {
           : await api.register(email.trim(), password, fullName.trim())
 
       setSession(result.token, result.email, result.role, result.fullName)
-      navigate(isAdmin() ? '/admin' : '/', { replace: true })
+      navigate(result.role === 'Admin' ? '/admin' : '/', { replace: true })
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Khalad ayaa dhacay. Isku day mar kale.')
     } finally {

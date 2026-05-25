@@ -34,12 +34,15 @@ export type AdminStats = {
 
 import { getToken } from './auth'
 
+const RAILWAY_API = 'https://kaamil-production.up.railway.app'
+
 /**
- * Local dev: empty → Vite proxy /api → localhost:5177
- * Vercel: empty → vercel.json rewrites /api → Railway (CORS ma loo baahna)
- * Optional: VITE_API_URL=https://....railway.app for direct API
+ * Dev: empty → Vite proxy /api → localhost:5177
+ * Prod: VITE_API_URL or Railway fallback (CORS enabled on backend)
  */
-export const API_BASE = (import.meta.env.VITE_API_URL as string | undefined)?.replace(/\/$/, '') ?? ''
+export const API_BASE =
+  (import.meta.env.VITE_API_URL as string | undefined)?.replace(/\/$/, '') ||
+  (import.meta.env.PROD ? RAILWAY_API : '')
 
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   const token = getToken()

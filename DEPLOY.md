@@ -69,7 +69,7 @@ Ama: `dotnet run` (iyadoo `DATABASE_URL` la dejiyay) — migration + admin seed 
 
 | Name | Value |
 |------|-------|
-| `VITE_API_URL` | **Optional** — madhan = `vercel.json` proxy `/api` → Railway |
+| `VITE_API_URL` | `https://kaamil-production.up.railway.app` (ama isticmaal `frontend/.env.production`) |
 
 4. Deploy → copy Vercel URL (tusaale `https://kaamil.vercel.app`)
 5. Ku celi Railway `CORS_ORIGINS` → geli Vercel URL saxda ah
