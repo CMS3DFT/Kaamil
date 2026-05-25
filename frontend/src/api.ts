@@ -45,7 +45,16 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   }
   if (token) headers.Authorization = `Bearer ${token}`
 
-  const res = await fetch(`${API_BASE}/api${path}`, { ...options, headers })
+  let res: Response
+  try {
+    res = await fetch(`${API_BASE}/api${path}`, { ...options, headers })
+  } catch {
+    throw new Error(
+      API_BASE
+        ? 'Backend lama gaarin (CORS ama Railway ma socdo). Hubi VITE_API_URL iyo Railway redeploy.'
+        : 'Backend lama gaarin. Fur start-backend.cmd (localhost:5177).',
+    )
+  }
   if (!res.ok) {
     const err = await res.json().catch(() => ({ message: res.statusText }))
     const msg = (err as { message?: string }).message

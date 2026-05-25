@@ -44,32 +44,20 @@ public static class ServiceCollectionExtensions
             ?? Environment.GetEnvironmentVariable("CORS_ORIGINS")
             ?? "http://localhost:5173,https://kaamil.vercel.app";
 
-        var origins = corsRaw
-            .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-            .Select(o => o.TrimEnd('/'))
-            .Distinct(StringComparer.OrdinalIgnoreCase)
-            .ToArray();
+        var origins = CorsOriginHelper.MergeConfiguredOrigins(
+            corsRaw.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries));
 
         services.AddCors(options =>
         {
             options.AddPolicy("Frontend", policy =>
             {
-                policy.SetIsOriginAllowed(origin =>
-                {
-                    if (string.IsNullOrWhiteSpace(origin))
-                        return false;
+                policy.SetIsOriginAllowed(CorsOriginHelper.IsAllowed);
+                policy.AllowAnyHeader().AllowAnyMethod();
+            });
 
-                    var normalized = origin.TrimEnd('/');
-                    if (origins.Contains(normalized, StringComparer.OrdinalIgnoreCase))
-                        return true;
-
-                    if (Uri.TryCreate(normalized, UriKind.Absolute, out var uri)
-                        && (uri.Host.Equals("kaamil.vercel.app", StringComparison.OrdinalIgnoreCase)
-                            || uri.Host.EndsWith(".vercel.app", StringComparison.OrdinalIgnoreCase)))
-                        return true;
-
-                    return false;
-                });
+            options.AddDefaultPolicy(policy =>
+            {
+                policy.SetIsOriginAllowed(CorsOriginHelper.IsAllowed);
                 policy.AllowAnyHeader().AllowAnyMethod();
             });
         });

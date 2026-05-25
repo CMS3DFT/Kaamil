@@ -18,7 +18,8 @@ builder.Services.AddKaamilServices(builder.Configuration);
 
 var app = builder.Build();
 
-app.UseCors("Frontend");
+app.UseMiddleware<KaamilCorsMiddleware>();
+app.UseCors();
 
 app.MapKaamilHealth();
 

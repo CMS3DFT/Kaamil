@@ -1,6 +1,7 @@
 using Kaamil.Api.Data;
 using Kaamil.Api.DTOs;
 using Kaamil.Api.Services;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,6 +9,7 @@ namespace Kaamil.Api.Controllers;
 
 [ApiController]
 [Route("api/auth")]
+[EnableCors("Frontend")]
 public class AuthController(KaamilDbContext db, ITokenService tokenService) : ControllerBase
 {
     [HttpPost("login")]

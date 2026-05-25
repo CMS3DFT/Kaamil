@@ -11,6 +11,7 @@ public static class HealthEndpoints
         {
             status = "ok",
             service = "Kaamil.Api",
+            cors = "kaamil.vercel.app enabled",
             time = DateTime.UtcNow,
         }));
 
