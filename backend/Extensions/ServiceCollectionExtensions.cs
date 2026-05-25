@@ -19,9 +19,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ITokenService, TokenService>();
         services.AddSingleton<ReportFileService>();
 
-        var jwtKey = config["Jwt:Key"]
-            ?? Environment.GetEnvironmentVariable("JWT_KEY")
-            ?? throw new InvalidOperationException("JWT key missing. Set Jwt__Key or JWT_KEY.");
+        var jwtKey = JwtConfiguration.ResolveJwtKey(config);
 
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
@@ -62,7 +60,13 @@ public static class ServiceCollectionExtensions
             });
         });
 
-        services.AddControllers();
+        services.AddControllers()
+            .AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
+                options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+            });
+
         return services;
     }
 }

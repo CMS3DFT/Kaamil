@@ -18,6 +18,21 @@ builder.Services.AddKaamilServices(builder.Configuration);
 
 var app = builder.Build();
 
+app.UseExceptionHandler(errorApp =>
+{
+    errorApp.Run(async context =>
+    {
+        context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+        context.Response.ContentType = "application/json";
+        var ex = context.Features.Get<Microsoft.AspNetCore.Diagnostics.IExceptionHandlerFeature>()?.Error;
+        app.Logger.LogError(ex, "Unhandled API error");
+        await context.Response.WriteAsJsonAsync(new
+        {
+            message = ex?.Message ?? "Server error. Isku day mar kale.",
+        });
+    });
+});
+
 app.UseMiddleware<KaamilCorsMiddleware>();
 app.UseCors();
 

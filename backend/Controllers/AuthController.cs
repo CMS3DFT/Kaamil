@@ -15,10 +15,26 @@ public class AuthController(KaamilDbContext db, ITokenService tokenService) : Co
     [HttpPost("login")]
     public async Task<ActionResult<LoginResponse>> Login([FromBody] LoginRequest request)
     {
+        if (string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Password))
+            return BadRequest(new { message = "Fadlan geli email iyo password." });
+
         var email = request.Email.Trim().ToLowerInvariant();
         var user = await db.Users.FirstOrDefaultAsync(u => u.Email == email);
 
-        if (user is null || !user.IsActive || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
+        if (user is null || !user.IsActive)
+            return Unauthorized(new { message = "Email ama password waa khalad." });
+
+        var passwordValid = false;
+        try
+        {
+            passwordValid = BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash);
+        }
+        catch
+        {
+            return Unauthorized(new { message = "Email ama password waa khalad." });
+        }
+
+        if (!passwordValid)
             return Unauthorized(new { message = "Email ama password waa khalad." });
 
         if (user.Role != "Admin")

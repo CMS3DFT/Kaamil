@@ -47,10 +47,13 @@ export default function LoginPage() {
 
     setLoading(true)
     try {
+      const trimmedEmail = email.trim().toLowerCase()
+      const trimmedPassword = password.trim()
+
       const result =
         mode === 'login'
-          ? await api.login(email.trim(), password)
-          : await api.register(email.trim(), password, fullName.trim())
+          ? await api.login(trimmedEmail, trimmedPassword)
+          : await api.register(trimmedEmail, trimmedPassword, fullName.trim())
 
       setSession(result.token, result.email, result.role, result.fullName)
       navigate(result.role === 'Admin' ? '/admin' : '/', { replace: true })

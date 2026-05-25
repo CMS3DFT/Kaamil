@@ -1,6 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Kaamil.Api.Extensions;
 using Kaamil.Api.Models;
 using Microsoft.IdentityModel.Tokens;
 
@@ -10,7 +11,7 @@ public class TokenService(IConfiguration config) : ITokenService
 {
     public string CreateToken(AppUser user)
     {
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["Jwt:Key"]!));
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JwtConfiguration.ResolveJwtKey(config)));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
         var expireMinutes = int.Parse(config["Jwt:ExpireMinutes"] ?? "480");
 

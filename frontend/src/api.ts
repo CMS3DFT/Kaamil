@@ -73,6 +73,7 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
       )
     }
     if (res.status === 401) throw new Error(msg ?? 'Email ama password waa khalad.')
+    if (res.status === 500) throw new Error(msg ?? 'Server error — Railway JWT_KEY hubi oo redeploy.')
     if (res.status === 409) throw new Error(msg ?? 'Email-kan hore ayaa loo diiwaangeliyay.')
     if (res.status === 502 || res.status === 503) {
       throw new Error('Bad Gateway — backend ma socdo. Fur start-backend.cmd kadib isku day.')
