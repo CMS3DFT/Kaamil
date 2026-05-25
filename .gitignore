@@ -1,0 +1,11 @@
+# Secrets
+**/.env
+**/.env.local
+**/appsettings.Development.local.json
+backend/uploads/
+
+# Build
+**/bin/
+**/obj/
+**/dist/
+node_modules/

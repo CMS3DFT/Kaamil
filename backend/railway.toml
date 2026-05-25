@@ -1,0 +1,7 @@
+[build]
+builder = "nixpacks"
+
+[deploy]
+startCommand = "dotnet Kaamil.Api.dll"
+healthcheckPath = "/health"
+restartPolicyType = "on_failure"
