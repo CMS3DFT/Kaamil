@@ -19,8 +19,6 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ITokenService, TokenService>();
         services.AddSingleton<ReportFileService>();
 
-        var jwtKey = JwtConfiguration.ResolveJwtKey(config);
-
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
@@ -32,7 +30,7 @@ public static class ServiceCollectionExtensions
                     ValidateIssuerSigningKey = true,
                     ValidIssuer = config["Jwt:Issuer"] ?? "Kaamil.Api",
                     ValidAudience = config["Jwt:Audience"] ?? "Kaamil.Frontend",
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
+                    IssuerSigningKey = JwtConfiguration.GetSigningKey(config),
                 };
             });
 

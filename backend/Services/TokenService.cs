@@ -11,7 +11,7 @@ public class TokenService(IConfiguration config) : ITokenService
 {
     public string CreateToken(AppUser user)
     {
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JwtConfiguration.ResolveJwtKey(config)));
+        var key = JwtConfiguration.GetSigningKey(config);
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
         var expireMinutes = int.Parse(config["Jwt:ExpireMinutes"] ?? "480");
 
