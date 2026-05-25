@@ -20,18 +20,25 @@ var app = builder.Build();
 
 app.UseCors("Frontend");
 
-using (var scope = app.Services.CreateScope())
-{
-    var db = scope.ServiceProvider.GetRequiredService<KaamilDbContext>();
-    await db.Database.MigrateAsync();
-    await DbSeeder.SeedAsync(db);
-    scope.ServiceProvider.GetRequiredService<ReportFileService>().EnsureUploadDirectory();
-}
+app.MapKaamilHealth();
 
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
-app.MapGet("/health", () => Results.Ok(new { status = "ok" }));
+try
+{
+    using var scope = app.Services.CreateScope();
+    var db = scope.ServiceProvider.GetRequiredService<KaamilDbContext>();
+    await db.Database.MigrateAsync();
+    await DbSeeder.SeedAsync(db);
+    scope.ServiceProvider.GetRequiredService<ReportFileService>().EnsureUploadDirectory();
+    app.Logger.LogInformation("Database migration and seed completed.");
+}
+catch (Exception ex)
+{
+    app.Logger.LogError(ex,
+        "Database setup failed at startup. API is running — check GET /health/db on Railway.");
+}
 
 app.Run();

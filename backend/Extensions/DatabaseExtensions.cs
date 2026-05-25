@@ -53,4 +53,31 @@ public static class DatabaseExtensions
 
         return builder.ConnectionString;
     }
+
+    public static (string Host, string Database) GetSafeConnectionInfo(IConfiguration config)
+    {
+        try
+        {
+            var raw = config.GetConnectionString("DefaultConnection");
+            if (string.IsNullOrWhiteSpace(raw))
+                raw = Environment.GetEnvironmentVariable("DATABASE_URL");
+
+            if (string.IsNullOrWhiteSpace(raw))
+                return ("not-configured", "not-configured");
+
+            if (raw.StartsWith("postgres", StringComparison.OrdinalIgnoreCase))
+            {
+                var uri = new Uri(raw);
+                var database = uri.AbsolutePath.TrimStart('/');
+                return (uri.Host, string.IsNullOrEmpty(database) ? "neondb" : database);
+            }
+
+            var cs = new NpgsqlConnectionStringBuilder(raw);
+            return (cs.Host ?? "unknown", cs.Database ?? "unknown");
+        }
+        catch
+        {
+            return ("invalid-connection-string", "unknown");
+        }
+    }
 }
