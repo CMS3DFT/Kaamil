@@ -34,7 +34,11 @@ export type AdminStats = {
 
 import { getToken } from './auth'
 
-/** Local dev: empty = Vite proxy /api. Production (Vercel): set VITE_API_URL to Railway URL */
+/**
+ * Local dev: empty → Vite proxy /api → localhost:5177
+ * Vercel: empty → vercel.json rewrites /api → Railway (CORS ma loo baahna)
+ * Optional: VITE_API_URL=https://....railway.app for direct API
+ */
 export const API_BASE = (import.meta.env.VITE_API_URL as string | undefined)?.replace(/\/$/, '') ?? ''
 
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
@@ -50,8 +54,8 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
     res = await fetch(`${API_BASE}/api${path}`, { ...options, headers })
   } catch {
     throw new Error(
-      API_BASE
-        ? 'Backend lama gaarin (CORS ama Railway ma socdo). Hubi VITE_API_URL iyo Railway redeploy.'
+      import.meta.env.PROD
+        ? 'Backend lama gaarin. Vercel: redeploy kadib vercel.json proxy. Railway: hubi /health'
         : 'Backend lama gaarin. Fur start-backend.cmd (localhost:5177).',
     )
   }
