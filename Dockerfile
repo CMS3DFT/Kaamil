@@ -1,8 +1,10 @@
+# Railway: use when Root Directory = repo root (not set to backend/)
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
-COPY Kaamil.Api.csproj .
-RUN dotnet restore Kaamil.Api.csproj
-COPY . .
+COPY backend/Kaamil.Api.csproj backend/
+RUN dotnet restore backend/Kaamil.Api.csproj
+COPY backend/ backend/
+WORKDIR /src/backend
 RUN dotnet publish Kaamil.Api.csproj -c Release -o /app/publish
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final

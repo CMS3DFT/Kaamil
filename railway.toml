@@ -1,4 +1,4 @@
-# Root Directory MUST be: backend
+# Repo root — backend API (set Root Directory empty OR "backend" with backend/railway.toml)
 [build]
 builder = "dockerfile"
 dockerfilePath = "Dockerfile"

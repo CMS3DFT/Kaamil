@@ -37,8 +37,14 @@ Ama: `dotnet run` (iyadoo `DATABASE_URL` la dejiyay) — migration + admin seed 
 ## 2. Railway (Backend)
 
 1. Gal [railway.app](https://railway.app) → **New Project** → **Deploy from GitHub**
-2. Dooro repo `Kaamil` → **Root Directory**: `backend`
-3. **Variables** (Settings → Variables):
+2. Dooro repo `Kaamil`
+3. **Settings → Root Directory** — dooro **mid**:
+   - `backend` (recommended), **AMA**
+   - madhan (repo root) — wuxuu isticmaalaa `Dockerfile` ee root-ka
+4. **Settings → Build** → Builder: **Dockerfile**, path: `backend/Dockerfile` (ama `Dockerfile` haddii root madhan)
+5. **Settings → Deploy → Custom Start Command** → **TIR** (madhan / delete) — ha isticmaalin `npm run start`!
+   - Backend waa .NET, ma aha Node. Dockerfile `ENTRYPOINT` ayaa bilaabaya app-ka.
+5. **Variables** (Settings → Variables):
 
 | Variable | Qiime |
 |----------|-------|
@@ -104,6 +110,7 @@ Vite proxy `/api` → `localhost:5177` (haddii `VITE_API_URL` madhan yahay).
 
 | Qalad | Xalka |
 |-------|-------|
+| Railway build failed | Root Directory = `backend`; Builder = Dockerfile; **tir** `npm run start` start command |
 | Bad Gateway / 502 | Backend Railway ma socdo ama `VITE_API_URL` khalad |
 | CORS error | `CORS_ORIGINS` ku dar Vercel URL saxda |
 | Database error | Hubi `DATABASE_URL` Neon; run `migrate-neon.cmd` ama restart Railway |

@@ -1,0 +1,8 @@
+# Fallback if Railway uses Nixpacks instead of Dockerfile (Root Directory = backend)
+providers = ["dotnet"]
+
+[phases.build]
+cmds = ["dotnet publish Kaamil.Api.csproj -c Release -o /app/out"]
+
+[start]
+cmd = "dotnet /app/out/Kaamil.Api.dll"
