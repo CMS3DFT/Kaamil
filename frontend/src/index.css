@@ -62,8 +62,12 @@ body {
   background: var(--bg);
 }
 
-body {
-  margin: 0;
+.safe-bottom {
+  padding-bottom: max(0.25rem, env(safe-area-inset-bottom, 0px));
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
 }
 
 h1,

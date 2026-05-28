@@ -55,9 +55,9 @@ export default function UserOverview() {
 
   return (
     <div className="space-y-8">
-      <div className="rounded-3xl bg-gradient-to-r from-pink-500 via-rose-500 to-pink-600 p-8 text-white shadow-xl shadow-pink-300/30">
-        <p className="text-pink-100">Dashboard-kaaga</p>
-        <h1 className="mt-2 text-3xl font-bold">Ku soo dhawoow, Kaamil Maal</h1>
+      <div className="rounded-2xl bg-gradient-to-r from-pink-500 via-rose-500 to-pink-600 p-5 text-white shadow-xl shadow-pink-300/30 sm:rounded-3xl sm:p-8">
+        <p className="text-sm text-pink-100 sm:text-base">Dashboard-kaaga</p>
+        <h1 className="mt-2 text-2xl font-bold sm:text-3xl">Ku soo dhawoow, Kaamil Maal</h1>
         <p className="mt-2 max-w-xl text-pink-100">
           Halkan ka arag wadarta dakhliga, kharashaadka, iyo liiska transactions-ka ugu dambeeyay.
         </p>

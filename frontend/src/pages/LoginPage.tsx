@@ -102,7 +102,7 @@ export default function LoginPage() {
             <h1 className="text-2xl font-bold text-white">Kaamil Maal</h1>
           </div>
 
-          <div className="rounded-3xl border border-white/10 bg-white/5 p-8 shadow-2xl backdrop-blur-xl">
+          <div className="rounded-2xl border border-white/10 bg-white/5 p-5 shadow-2xl backdrop-blur-xl sm:rounded-3xl sm:p-8">
             <div className="mb-6 flex rounded-xl bg-slate-900/60 p-1">
               <button
                 type="button"

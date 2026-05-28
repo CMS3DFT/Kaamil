@@ -113,8 +113,62 @@ export default function AdminUsers() {
       {message && <p className="rounded-xl bg-emerald-50 px-4 py-3 text-sm text-emerald-700">{message}</p>}
       {error && <p className="rounded-xl bg-pink-50 px-4 py-3 text-sm text-pink-700">{error}</p>}
 
-      <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-        <table className="w-full text-left text-sm">
+      <div className="space-y-3 md:hidden">
+        {loading ? (
+          <p className="py-12 text-center text-slate-400">Loading...</p>
+        ) : (
+          users.map((u) => (
+            <div key={u.id} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+              <p className="font-semibold text-slate-900">{u.fullName}</p>
+              <p className="mt-1 truncate text-sm text-slate-600">{u.email}</p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                <span
+                  className={`rounded-full px-2.5 py-1 text-xs font-medium ${
+                    u.role === 'Admin' ? 'bg-violet-100 text-violet-700' : 'bg-slate-100 text-slate-700'
+                  }`}
+                >
+                  {u.role}
+                </span>
+                <span
+                  className={`rounded-full px-2.5 py-1 text-xs font-medium ${
+                    u.isActive ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'
+                  }`}
+                >
+                  {u.isActive ? 'Active' : 'Inactive'}
+                </span>
+              </div>
+              <div className="mt-4 flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={() => setEditUser({ ...u })}
+                  className="rounded-lg border border-slate-200 px-3 py-1.5 text-xs hover:bg-slate-50"
+                >
+                  Edit
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setResetId(u.id)}
+                  className="rounded-lg border border-pink-200 px-3 py-1.5 text-xs text-pink-600 hover:bg-pink-50"
+                >
+                  Password
+                </button>
+                {u.role !== 'Admin' && (
+                  <button
+                    type="button"
+                    onClick={() => handleDelete(u.id)}
+                    className="rounded-lg border border-red-200 px-3 py-1.5 text-xs text-red-600 hover:bg-red-50"
+                  >
+                    Delete
+                  </button>
+                )}
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+
+      <div className="hidden overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm md:block">
+        <table className="w-full min-w-[640px] text-left text-sm">
           <thead className="border-b border-slate-200 bg-slate-50 text-slate-600">
             <tr>
               <th className="px-6 py-4 font-semibold">Magac</th>
